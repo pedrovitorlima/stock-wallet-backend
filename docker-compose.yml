@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  postgres-test:
+    image: postgres
+    environment: 
+      POSTGRES_PASSWORD: "1234"
+      POSTGRES_USER: "pgtest"
+    ports:
+      - "15432:5432"
+    volumes:
+      - /Users/lapedro/Documents/postgres-volumes/stock-bd:/var/lib/postgresql/data
+    networks: 
+      - postgres-network
+
+  pgadmin-test:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "pedrovitorlima@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "1234"
+    ports:
+      - "16543:80"
+    depends_on: 
+      - postgres-test
+    networks: 
+      - postgres-network
+
+networks:
+  postgres-network:
+    driver: bridge
