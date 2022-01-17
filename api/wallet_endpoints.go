@@ -8,7 +8,11 @@ import (
 	walletdb "github.com/pedrovitorlima/stock-wallet-backend/database/repository"
 )
 
-func Create(w http.ResponseWriter, request *http.Request) {
+type WalletEndpoint struct {
+	repository walletdb.WalletRepository
+}
+
+func (endpoint WalletEndpoint) Create(w http.ResponseWriter, request *http.Request) {
 	var wallet walletdb.Wallet
 	decoder := json.NewDecoder(request.Body)
 	if err := decoder.Decode(&wallet); err != nil {
@@ -17,12 +21,7 @@ func Create(w http.ResponseWriter, request *http.Request) {
 
 	defer request.Body.Close()
 
-	if err := walletdb.Create(&wallet); err != nil {
+	if _, err := endpoint.repository.Create(&wallet); err != nil {
 		log.Fatalf("Error while creating wallet: %v", err)
 	}
-}
-
-func Get(w http.ResponseWriter, request *http.Request) {
-	wallets := walletdb.FindAll()
-	json.NewEncoder(w).Encode(wallets)
 }
