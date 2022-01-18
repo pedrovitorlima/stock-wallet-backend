@@ -3,6 +3,11 @@ package dbconfig
 import (
 	"database/sql"
 	"fmt"
+	"log"
+
+	"github.com/pedrovitorlima/stock-wallet-backend/models"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 const PostgresDriver = "postgres"
@@ -19,4 +24,16 @@ var DataSourceName = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s 
 
 func GetConnection() (*sql.DB, error) {
 	return sql.Open(PostgresDriver, DataSourceName)
+}
+
+func Init() *gorm.DB {
+	db, err := gorm.Open(postgres.Open(DataSourceName), &gorm.Config{})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	db.AutoMigrate(&models.Wallet{})
+
+	return db
 }
