@@ -21,15 +21,13 @@ func (h WalletHandler) CreateWallet(writter http.ResponseWriter, request *http.R
 	var wallet models.Wallet
 	json.Unmarshal(body, &wallet)
 
+	writter.Header().Add("Content-Type", "application/json")
+
 	if err := validate(&wallet); err != nil {
 		log.Println(err)
-
-		writter.Header().Add("Content-Type", "application/json")
 		writter.WriteHeader(http.StatusBadRequest)
 	} else {
 		h.walletRepository.Add(&wallet)
-
-		writter.Header().Add("Content-Type", "application/json")
 		writter.WriteHeader(http.StatusCreated)
 		json.NewEncoder(writter).Encode("Created")
 	}

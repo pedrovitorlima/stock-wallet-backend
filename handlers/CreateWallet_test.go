@@ -18,7 +18,7 @@ func (d WalletRepositoryMock) Add(wallet *models.Wallet) {
 	d.AddFn(wallet)
 }
 
-func Test_CreateWalletShouldReturnErrorGivenBodyIsInvalid(t *testing.T) {
+func Test_CreateWalletShouldNotCallRepositoryGivenBodyIsInvalid(t *testing.T) {
 
 	called := false
 	walletRepositoryMock := WalletRepositoryMock{
