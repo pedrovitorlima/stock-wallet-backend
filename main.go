@@ -40,7 +40,7 @@ func main() {
 	router.Use(CORS)
 
 	router.HandleFunc("/wallet", walletHandler.CreateWallet).Methods(http.MethodPost, http.MethodOptions)
-	router.HandleFunc("/wallet/stocks", walletHandler.CreateWallet).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/wallet/stock", walletHandler.CreateWallet).Methods(http.MethodPost, http.MethodOptions)
 
 	err := http.ListenAndServe(":4000", router)
 
