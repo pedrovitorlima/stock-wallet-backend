@@ -9,7 +9,7 @@ type Wallet struct {
 	Name string `json:"name"`
 }
 
-func (w *Wallet) Validate() *[]errors.ValidationErrors {
+func (w *Wallet) ValidateToCreate() *[]errors.ValidationErrors {
 	errs := []errors.ValidationErrors{}
 	if w.Name == "" {
 		err := errors.ValidationErrors{"name", "Name cannot be empty"}
@@ -18,6 +18,11 @@ func (w *Wallet) Validate() *[]errors.ValidationErrors {
 
 	if len(w.Name) > 200 {
 		err := errors.ValidationErrors{"name", "Name size should not be bigger than 200"}
+		errs = append(errs, err)
+	}
+
+	if w.Id != 0 {
+		err := errors.ValidationErrors{"id", "Id cannot have value for Create"}
 		errs = append(errs, err)
 	}
 
