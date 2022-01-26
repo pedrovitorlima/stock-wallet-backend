@@ -1,6 +1,19 @@
 version: "3"
 
 services:
+  app:
+    container_name: app-dev
+    image: app-dev
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/app
+    ports:
+      - 4000:4000
+    depends_on: 
+      - postgres-test
+
   postgres-test:
     image: postgres
     environment: 
@@ -10,21 +23,3 @@ services:
       - "15432:5432"
     volumes:
       - /Users/lapedro/Documents/postgres-volumes/stock-bd:/var/lib/postgresql/data
-    networks: 
-      - postgres-network
-
-  pgadmin-test:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "pedrovitorlima@gmail.com"
-      PGADMIN_DEFAULT_PASSWORD: "1234"
-    ports:
-      - "16543:80"
-    depends_on: 
-      - postgres-test
-    networks: 
-      - postgres-network
-
-networks:
-  postgres-network:
-    driver: bridge

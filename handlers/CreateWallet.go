@@ -2,15 +2,20 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 
+	"github.com/pedrovitorlima/stock-wallet-backend/errors"
 	"github.com/pedrovitorlima/stock-wallet-backend/models"
 )
 
 func (h WalletHandler) CreateWallet(writter http.ResponseWriter, request *http.Request) {
+	writter.Header().Set("Access-Control-Allow-Origin", "*")
+	writter.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+	writter.Header().Set("Content-Type", "text/html; charset=utf-8")
+
 	defer request.Body.Close()
 	body, err := ioutil.ReadAll(request.Body)
 
@@ -23,19 +28,28 @@ func (h WalletHandler) CreateWallet(writter http.ResponseWriter, request *http.R
 
 	writter.Header().Add("Content-Type", "application/json")
 
-	if err := validate(&wallet); err != nil {
-		log.Println(err)
+	if apiError := validate(&wallet); apiError != nil {
 		writter.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(writter).Encode(apiError)
 	} else {
 		h.walletRepository.Add(&wallet)
 		writter.WriteHeader(http.StatusCreated)
 		json.NewEncoder(writter).Encode("Created")
+		log.Printf("Created anoter wallet[%d, %s]", wallet.Id, wallet.Name)
 	}
 }
 
-func validate(wallet *models.Wallet) error {
-	if wallet.Id > 0 || wallet.Name == "" {
-		return fmt.Errorf("invalid body for wallet creation endpoint: wallet[%d, %s]", wallet.Id, wallet.Name)
+func validate(wallet *models.Wallet) *errors.ApiRequestErrors {
+	if wallet.Id > 0 {
+		return errors.SingleError("id", "Id should not be provided for creation")
+	}
+
+	if len([]rune(wallet.Name)) > 200 {
+		return errors.SingleError("name", "Name size should not be bigger than 200")
+	}
+
+	if wallet.Name == "" {
+		return errors.SingleError("name", "Name cannot be empty")
 	}
 
 	return nil

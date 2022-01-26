@@ -13,8 +13,11 @@ import (
 const PostgresDriver = "postgres"
 const SqlLiteDriver = "sqllite"
 const User = "pgtest"
-const Host = "localhost"
 
+// const Host = "postgres-test"
+// const Port = "5432"
+
+const Host = "localhost"
 const Port = "15432"
 
 const Password = "1234"
