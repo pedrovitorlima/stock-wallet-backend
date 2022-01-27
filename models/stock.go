@@ -6,7 +6,7 @@ type Stock struct {
 	Id       int    `json:"id" gorm:"primaryKey"`
 	Quantity int    `json:"quantity"`
 	IdWallet int    `json:"idWallet"`
-	wallet   Wallet `json:"id" gorm:"primaryKey"`
+	wallet   Wallet `json:"wallet" gorm:"foreignKey:idWallet"`
 }
 
 func (stock *Stock) ValidateToCreate() *[]errors.ValidationErrors {
