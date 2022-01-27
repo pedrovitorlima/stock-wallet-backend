@@ -3,7 +3,7 @@ package models
 import (
 	"testing"
 
-	"github.com/pedrovitorlima/stock-wallet-backend/errors"
+	"github.com/pedrovitorlima/stock-wallet-backend/test_utils"
 )
 
 func Test_ShouldReturnErrorGivenNameIsTooBig(t *testing.T) {
@@ -37,17 +37,7 @@ func expectErrorToExist(wallet Wallet, field string, expectedError string, t *te
 		t.Error("Should have errors returned")
 	}
 
-	if notContainError(*errors, field, expectedError) {
+	if test_utils.NotContainError(*errors, field, expectedError) {
 		t.Errorf("Should contain error {%s, %s}", field, expectedError)
 	}
-}
-
-func notContainError(validationErrors []errors.ValidationErrors, field string, description string) bool {
-	for _, err := range validationErrors {
-		if err.Field == field && err.Description == description {
-			return false
-		}
-	}
-
-	return true
 }
