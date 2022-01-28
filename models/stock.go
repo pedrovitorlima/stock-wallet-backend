@@ -22,5 +22,10 @@ func (stock *Stock) ValidateToCreate() *[]errors.ValidationErrors {
 		errs = append(errs, err)
 	}
 
+	if stock.IdWallet <= 0 {
+		err := errors.ValidationErrors{"idWallet", "No wallet id supplied"}
+		errs = append(errs, err)
+	}
+
 	return &errs
 }

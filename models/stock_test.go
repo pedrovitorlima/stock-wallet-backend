@@ -37,12 +37,26 @@ func Test_ShouldReturnErrorGivenIdIsFilled(t *testing.T) {
 func Test_ShouldReturnErrorGivenQuantityIsLessOrEqualsToZero(t *testing.T) {
 	stock := Stock{
 		Quantity: 0,
+		IdWallet: 1,
 	}
 
 	validationErrors := stock.ValidateToCreate()
 	expectedError := "Quantity needs to be a positive number"
 
 	if test_utils.NotContainError(*validationErrors, "quantity", expectedError) {
+		t.Errorf("expected to find an error like [%s]", expectedError)
+	}
+}
+
+func Test_ShouldReturnErrorGivenQuantityIsNotSupplied(t *testing.T) {
+	stock := Stock{
+		Quantity: 0,
+	}
+
+	validationErrors := stock.ValidateToCreate()
+	expectedError := "No wallet id supplied"
+
+	if test_utils.NotContainError(*validationErrors, "idWallet", expectedError) {
 		t.Errorf("expected to find an error like [%s]", expectedError)
 	}
 }

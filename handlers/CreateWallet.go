@@ -23,7 +23,7 @@ func (h WalletHandler) CreateWallet(writter http.ResponseWriter, request *http.R
 
 	writter.Header().Add("Content-Type", "application/json")
 
-	if validationErrors := wallet.ValidateToCreate(); len(*validationErrors) > 0 {
+	if validationErrors := wallet.ValidateToCreate(); len(*wallet.ValidateToCreate()) > 0 {
 		apiErrors := errors.ApiRequestErrors{*validationErrors}
 		writter.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(writter).Encode(apiErrors)
