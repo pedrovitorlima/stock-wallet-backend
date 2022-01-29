@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -56,35 +55,13 @@ func initServerAndRouter() (*mux.Router, *httptest.Server) {
 	router := mux.NewRouter()
 
 	DB := dbconfig.InitSqlLiteForTest()
-	repository := repository.WalletRepositoryImpl{Database: DB}
+	walletRepository := repository.WalletRepositoryImpl{Database: DB}
 
-	walletHandler := handlers.NewWalletHandler(repository)
+	walletHandler := handlers.NewWalletHandler(walletRepository)
+
 	router.HandleFunc("/wallet", walletHandler.CreateWallet).Methods("POST")
 
 	server := httptest.NewServer(router)
 	defer server.Close()
 	return router, server
-}
-
-func containsWallet(wallets []models.Wallet, walletToBeFound models.Wallet) bool {
-	for _, walletEl := range wallets {
-		if walletEl == walletToBeFound {
-			log.Printf("Found wallet %s in wallets {%s}",
-				walletsToString([]models.Wallet{walletToBeFound}),
-				walletsToString(wallets))
-
-			return true
-		}
-	}
-
-	return false
-}
-
-func walletsToString(wallets []models.Wallet) string {
-	var wallet_tostring string
-	for _, wallet := range wallets {
-		wallet_tostring = wallet_tostring + " " + fmt.Sprintf("[%b, %s]", wallet.Id, wallet.Name)
-	}
-
-	return wallet_tostring
 }

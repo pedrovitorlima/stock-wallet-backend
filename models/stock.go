@@ -1,6 +1,10 @@
 package models
 
-import "github.com/pedrovitorlima/stock-wallet-backend/errors"
+import (
+	"fmt"
+
+	"github.com/pedrovitorlima/stock-wallet-backend/errors"
+)
 
 type Stock struct {
 	Id       int    `json:"id" gorm:"primaryKey"`
@@ -18,7 +22,7 @@ func (stock *Stock) ValidateToCreate() *[]errors.ValidationErrors {
 	}
 
 	if stock.Quantity <= 0 {
-		err := errors.ValidationErrors{"quantity", "Quantity needs to be a positive number"}
+		err := errors.ValidationErrors{"quantity", fmt.Sprintf("%d is not a valid number for quantity", stock.Quantity)}
 		errs = append(errs, err)
 	}
 

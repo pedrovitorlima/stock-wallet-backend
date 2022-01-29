@@ -41,7 +41,7 @@ func Test_ShouldReturnErrorGivenQuantityIsLessOrEqualsToZero(t *testing.T) {
 	}
 
 	validationErrors := stock.ValidateToCreate()
-	expectedError := "Quantity needs to be a positive number"
+	expectedError := "0 is not a valid number for quantity"
 
 	if test_utils.NotContainError(*validationErrors, "quantity", expectedError) {
 		t.Errorf("expected to find an error like [%s]", expectedError)

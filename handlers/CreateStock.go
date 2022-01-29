@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/pedrovitorlima/stock-wallet-backend/errors"
 	"github.com/pedrovitorlima/stock-wallet-backend/models"
 )
 
@@ -20,8 +21,11 @@ func (handler StockHandler) CreateStock(writter http.ResponseWriter, request *ht
 	var stock models.Stock
 	json.Unmarshal(body, &stock)
 
-	if len(*stock.ValidateToCreate()) != 0 {
+	if errs := *stock.ValidateToCreate(); len(errs) != 0 {
 		writter.WriteHeader(http.StatusBadRequest)
+
+		apiErrors := errors.ApiRequestErrors{errs}
+		json.NewEncoder(writter).Encode(apiErrors)
 		return
 	}
 

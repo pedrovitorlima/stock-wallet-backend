@@ -33,14 +33,16 @@ func CORS(next http.Handler) http.Handler {
 
 func main() {
 	DB := dbconfig.Init()
-	repository := repository.WalletRepositoryImpl{Database: DB}
-	walletHandler := handlers.NewWalletHandler(repository)
+	walletRepository := repository.WalletRepositoryImpl{Database: DB}
+	stockRepository := repository.StockRepositoryImpl{Database: DB}
+	walletHandler := handlers.NewWalletHandler(walletRepository)
+	stockHandler := handlers.NewStockHandler(stockRepository)
 	router := mux.NewRouter()
 
 	router.Use(CORS)
 
 	router.HandleFunc("/wallet", walletHandler.CreateWallet).Methods(http.MethodPost, http.MethodOptions)
-	router.HandleFunc("/wallet/stock", walletHandler.CreateWallet).Methods(http.MethodPost, http.MethodOptions)
+	router.HandleFunc("/wallet/stock", stockHandler.CreateStock).Methods(http.MethodPost, http.MethodOptions)
 
 	err := http.ListenAndServe(":4000", router)
 
