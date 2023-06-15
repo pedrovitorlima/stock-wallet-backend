@@ -19,7 +19,8 @@ services:
     environment: 
       POSTGRES_PASSWORD: "1234"
       POSTGRES_USER: "pgtest"
+      PGDATA: /var/lib/postgresql/data
     ports:
       - "15432:5432"
     volumes:
-      - /Users/lapedro/Documents/postgres-volumes/stock-bd:/var/lib/postgresql/data
+      - /Users/pedrovitorlimarodrigues/Documents/Codebases/stock-wallet-backend/stock-bd:/var/lib/postgresql/data
